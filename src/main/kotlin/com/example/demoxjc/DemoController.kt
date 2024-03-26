@@ -34,4 +34,28 @@ class DemoController(private val service: DemoService) {
             service.foo2()
         }
     }
+
+    @GetMapping("/foo3")
+    suspend fun foo3(@RequestHeader("X-Request-ID") requestId: String): String {
+        return withLoggingContextAsync("rqId" to requestId) {
+            log.info { ">>> /foo3" }
+            service.foo3()
+        }
+    }
+
+    @GetMapping("/foo4")
+    suspend fun foo4(@RequestHeader("X-Request-ID") requestId: String): String {
+        return withLoggingContextAsync("rqId" to requestId) {
+            log.info { ">>> /foo4" }
+            service.foo4()
+        }
+    }
+
+    @GetMapping("/foo5")
+    suspend fun foo5(@RequestHeader("X-Request-ID") requestId: String): String {
+        return withLoggingContextAsync("rqId" to requestId) {
+            log.info { ">>> /foo5" }
+            service.foo5()
+        }
+    }
 }

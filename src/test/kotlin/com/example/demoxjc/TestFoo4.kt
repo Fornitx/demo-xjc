@@ -5,4 +5,4 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 @AutoConfigureWebTestClient
-class TestFoo2 : AbstractFooTest("/foo2")
+class TestFoo4 : AbstractFooTest("/foo4")
