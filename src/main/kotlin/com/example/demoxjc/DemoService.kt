@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
 private val log = KotlinLogging.logger { }
@@ -132,19 +133,19 @@ class DemoService(
     private suspend fun foo5Inner(): String {
         return supervisorScope {
             val res1Deferred = runAsyncInterruptible {
-                val future = CompletableFuture.supplyAsync({
+                val future = executor.run1 {
                     call1WithLog()?.toString()
-                }, executor)
+                }
                 future.get(5, TimeUnit.SECONDS)
             }
             val res2Deferred = runAsyncInterruptible {
-                val future = CompletableFuture.supplyAsync({
+                val future = executor.run1 {
                     call2WithLog()?.toString()
-                }, executor)
+                }
                 try {
                     future.get(5, TimeUnit.SECONDS)
                 } catch (ex: Exception) {
-                    future.completeExceptionally(ex)
+                    future.cancel(true)
                     log.error(ex) { "Exception in Future" }
                     throw ex
                 }
@@ -179,6 +180,14 @@ class DemoService(
             cancel()
             log.info("Canceled res2Deferred")
         }
+    }
+
+    private fun <T> ThreadPoolTaskExecutor.run1(supplier: () -> T): CompletableFuture<T> {
+        return CompletableFuture.supplyAsync(supplier, this)
+    }
+
+    private fun <T> ThreadPoolTaskExecutor.run2(supplier: () -> T): Future<T> {
+        return executor.submit(supplier)
     }
 
     private fun <T> CoroutineScope.runAsyncInterruptible(block: () -> T) = async {
