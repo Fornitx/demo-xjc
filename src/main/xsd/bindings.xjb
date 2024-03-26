@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<jaxb:bindings
+        xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+        xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+        jaxb:version="3.0">
+    <jxb:globalBindings xmlns:jxb="https://jakarta.ee/xml/ns/jaxb">
+        <xjc:simple/> <!-- adds @XmlRootElement annotations -->
+    </jxb:globalBindings>
+</jaxb:bindings>

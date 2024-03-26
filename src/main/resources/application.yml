@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: demo-xjc
+logging:
+  pattern:
+    dateformat: HH:mm:ss.SSS
+server:
+  error:
+    include-exception: true
+    include-message: always

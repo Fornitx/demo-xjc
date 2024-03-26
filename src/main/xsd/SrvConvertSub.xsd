@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" attributeFormDefault="unqualified" jxb:version="1.0">
+
+    <xsd:simpleType name="rqUID">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="([0-9]|[a-f]|[A-F]){32}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="sName">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="30"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="status">
+        <xsd:restriction base="xsd:int">
+            <xsd:enumeration value="200"/>
+            <xsd:enumeration value="400"/>
+            <xsd:enumeration value="413"/>
+            <xsd:enumeration value="500"/>
+            <xsd:enumeration value="503"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="sub">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="([A-Fa-f0-9]{16,96})"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="clientId">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[A-Fa-f0-9]{8}-([A-Fa-f0-9]{4}-){3}[A-Fa-f0-9]{12}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="id">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[\w-]{1,40}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="ucpId">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="64"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="tb">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="4"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="convertSubLineErrorResponse">
+        <xsd:all>
+            <xsd:element name="code">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:integer">
+                        <xsd:minInclusive value="1"/>
+                        <xsd:maxInclusive value="6"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="message">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="200"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+        </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="convertSubResponse">
+        <xsd:sequence>
+            <xsd:element name="ucpId" type="ucpId" minOccurs="0"/>
+            <xsd:element name="sub" type="sub" minOccurs="0"/>
+            <xsd:element name="tb" type="tb" minOccurs="0"/>
+            <xsd:element name="resultList" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="sub" type="sub"/>
+                        <xsd:element name="tb" type="tb" minOccurs="0"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="error" type="convertSubLineErrorResponse" minOccurs="0"/>
+            <xsd:element name="id" type="id"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="convertSub2UcpIdRq" type="convertSub2UcpIdRqDto"/>
+    <xsd:complexType name="convertSub2UcpIdRqDto">
+        <xsd:sequence>
+            <xsd:element name="rqUID" type="rqUID"/>
+            <xsd:element name="SPName" type="sName"/>
+            <xsd:element name="SCName" type="sName"/>
+            <xsd:element name="convertSubData" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="sub" type="sub"/>
+                        <xsd:element name="clientId" type="clientId"/>
+                        <xsd:element name="id" type="id"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="convertUcpId2SubRq" type="convertUcpId2SubRqDto"/>
+    <xsd:complexType name="convertUcpId2SubRqDto">
+        <xsd:sequence>
+            <xsd:element name="rqUID" type="rqUID"/>
+            <xsd:element name="SPName" type="sName"/>
+            <xsd:element name="SCName" type="sName"/>
+            <xsd:element name="convertSubData" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="ucpId" type="ucpId"/>
+                        <xsd:element name="clientId" type="clientId"/>
+                        <xsd:element name="tb" type="tb" minOccurs="0"/>
+                        <xsd:element name="id" type="id"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="convertSub2SubRq" type="convertSub2SubRqDto"/>
+    <xsd:complexType name="convertSub2SubRqDto">
+        <xsd:sequence>
+            <xsd:element name="rqUID" type="rqUID"/>
+            <xsd:element name="SPName" type="sName"/>
+            <xsd:element name="SCName" type="sName"/>
+            <xsd:element name="convertSubData" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="sub" type="sub"/>
+                        <xsd:element name="clientId" type="clientId"/>
+                        <xsd:element name="clientIdTo" type="clientId"/>
+                        <xsd:element name="id" type="id"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="convertSub2UcpIdRs" type="convertSub2UcpIdRsDto"/>
+    <xsd:complexType name="convertSub2UcpIdRsDto">
+        <xsd:sequence>
+            <xsd:element name="status" type="status"/>
+            <xsd:element name="rqUID" type="rqUID" minOccurs="0"/>
+            <xsd:element name="SPName" type="sName" minOccurs="0"/>
+            <xsd:element name="SCName" type="sName" minOccurs="0"/>
+            <xsd:element name="convertSubData" type = "convertSubResponse" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="convertUcpId2SubRs" type="convertUcpId2SubRsDto"/>
+    <xsd:complexType name="convertUcpId2SubRsDto">
+        <xsd:sequence>
+            <xsd:element name="status" type="status"/>
+            <xsd:element name="rqUID" type="rqUID" minOccurs="0"/>
+            <xsd:element name="SPName" type="sName" minOccurs="0"/>
+            <xsd:element name="SCName" type="sName" minOccurs="0"/>
+            <xsd:element name="convertSubData" type = "convertSubResponse" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="convertSub2SubRs" type="convertSub2SubRsDto"/>
+    <xsd:complexType name="convertSub2SubRsDto">
+        <xsd:sequence>
+            <xsd:element name="status" type="status"/>
+            <xsd:element name="rqUID" type="rqUID" minOccurs="0"/>
+            <xsd:element name="SPName" type="sName" minOccurs="0"/>
+            <xsd:element name="SCName" type="sName" minOccurs="0"/>
+            <xsd:element name="convertSubData" type = "convertSubResponse" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>
